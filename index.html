@@ -16,17 +16,11 @@
   .stat-label { font-size: .75rem; color: #888; margin-top: 2px; }
   .progress-bar { height: 6px; background: #e5e5e5; border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
   .progress-fill { height: 100%; background: #4a8c1c; border-radius: 3px; transition: width .3s; }
-
-  .toolbar { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .toolbar-btn { padding: 6px 14px; background: #fff; border: 1px solid #ddd; border-radius: 6px; font-size: .8rem; font-weight: 500; cursor: pointer; color: #555; display: flex; align-items: center; gap: 5px; }
-  .toolbar-btn:hover { background: #f5f5f0; border-color: #bbb; }
-  .toolbar-btn.import { color: #4a8c1c; border-color: #4a8c1c; }
-  .toolbar-btn.import:hover { background: #eef6e4; }
-  #import-file { display: none; }
-
-  .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 8px 18px; border-radius: 20px; font-size: .85rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; }
-  .toast.show { opacity: 1; }
-
+  .sync-status { font-size: .75rem; color: #888; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 6px; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
+  .sync-dot.connected { background: #4a8c1c; }
+  .sync-dot.saving { background: #f0a030; }
+  .sync-dot.error { background: #c0392b; }
   .add-form { background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 1rem; margin-bottom: 2rem; }
   .add-form-title { font-size: .75rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .75rem; }
   .add-form-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -37,7 +31,6 @@
   .add-form select:focus { border-color: #4a8c1c; }
   .add-btn { padding: 7px 18px; background: #4a8c1c; color: #fff; border: none; border-radius: 6px; font-size: .875rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
   .add-btn:hover { background: #3a7015; }
-
   .section { margin-bottom: 1.75rem; }
   .section-header { font-size: .72rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .07em; padding-bottom: 6px; border-bottom: 1px solid #e5e5e5; margin-bottom: 8px; }
   .item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 10px; border-radius: 8px; background: #fff; border: 1px solid #eee; margin-bottom: 5px; }
@@ -65,11 +58,12 @@
   .icon-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 13px; padding: 2px 4px; border-radius: 4px; line-height: 1; transition: color .15s, background .15s; }
   .icon-btn:hover { color: #555; background: #f0f0f0; }
   .icon-btn.delete:hover { color: #b03a1a; background: #fff0ed; }
+  .loading { text-align: center; padding: 3rem; color: #888; font-size: .9rem; }
   @media print {
     body { background: #fff; padding: .5rem; }
     .item { break-inside: avoid; }
     .section { break-inside: avoid; }
-    .add-form, .item-actions, .toolbar { display: none; }
+    .add-form, .item-actions, .sync-status { display: none; }
   }
 </style>
 </head>
@@ -78,17 +72,12 @@
   <h1>🇮🇱 → 🇮🇹 Move Checklist</h1>
   <p class="subtitle">Marc & Kat — Departing Jerusalem July 31, 2026</p>
   <div class="stats">
-    <div class="stat"><div class="stat-num" id="done-count">0</div><div class="stat-label">Done</div></div>
-    <div class="stat"><div class="stat-num" id="todo-count">0</div><div class="stat-label">To do</div></div>
-    <div class="stat"><div class="stat-num" id="pct">0%</div><div class="stat-label">Complete</div></div>
+    <div class="stat"><div class="stat-num" id="done-count">—</div><div class="stat-label">Done</div></div>
+    <div class="stat"><div class="stat-num" id="todo-count">—</div><div class="stat-label">To do</div></div>
+    <div class="stat"><div class="stat-num" id="pct">—</div><div class="stat-label">Complete</div></div>
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
-
-  <div class="toolbar">
-    <button class="toolbar-btn" onclick="exportData()">⬇️ Export progress</button>
-    <button class="toolbar-btn import" onclick="document.getElementById('import-file').click()">⬆️ Import progress</button>
-    <input type="file" id="import-file" accept=".json" onchange="importData(event)" />
-  </div>
+  <div class="sync-status"><div class="sync-dot" id="sync-dot"></div><span id="sync-label">Connecting…</span></div>
 
   <div class="add-form">
     <div class="add-form-title">➕ Add item</div>
@@ -110,11 +99,27 @@
     </div>
   </div>
 
-  <div id="checklist"></div>
+  <div id="checklist"><div class="loading">Loading checklist…</div></div>
 </div>
-<div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC2DRXM70zLdAkFTESI81vHGE7D57Ob3Yc",
+  authDomain: "move-checklist-b3bf7.firebaseapp.com",
+  databaseURL: "https://move-checklist-b3bf7-default-rtdb.firebaseio.com",
+  projectId: "move-checklist-b3bf7",
+  storageBucket: "move-checklist-b3bf7.firebasestorage.app",
+  messagingSenderId: "797017835162",
+  appId: "1:797017835162:web:7420b4c5a65ab360d78123"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const checklistRef = ref(db, 'checklist');
+
 const SECTIONS = [
   "Done / In Progress","June","Pending / ASAP","July 1","July 9–15",
   "Late July","August — Cyclops","Italy — On Arrival","Post-Move"
@@ -168,77 +173,63 @@ const defaultItems = [
   {id:45, label:"US taxes 2026 — file / pay", date:"12/15", section:"Post-Move", done:false},
 ];
 
-function loadState() {
-  const saved = JSON.parse(localStorage.getItem('checklist_v3') || 'null');
-  if (saved) return saved;
-  return { items: JSON.parse(JSON.stringify(defaultItems)), nextId: 100 };
-}
-
-let appState = loadState();
+let appState = { items: [], nextId: 100 };
 let editingId = null;
+let initialized = false;
 
-function save() {
-  localStorage.setItem('checklist_v3', JSON.stringify(appState));
+function setSyncStatus(status) {
+  const dot = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-label');
+  dot.className = 'sync-dot ' + status;
+  if (status === 'connected') label.textContent = 'Synced';
+  else if (status === 'saving') label.textContent = 'Saving…';
+  else if (status === 'error') label.textContent = 'Connection error';
+  else label.textContent = 'Connecting…';
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+// Listen for real-time updates from Firebase
+onValue(checklistRef, (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    appState = data;
+  } else {
+    // First time — seed with defaults
+    appState = { items: JSON.parse(JSON.stringify(defaultItems)), nextId: 100 };
+    set(checklistRef, appState);
+  }
+  initialized = true;
+  setSyncStatus('connected');
+  render();
+}, (error) => {
+  setSyncStatus('error');
+});
+
+function saveToFirebase() {
+  setSyncStatus('saving');
+  set(checklistRef, appState).then(() => setSyncStatus('connected'));
 }
 
-function exportData() {
-  const blob = new Blob([JSON.stringify(appState, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'move_checklist_progress.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('✅ Progress exported!');
-}
-
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data.items || !Array.isArray(data.items)) throw new Error('Invalid file');
-      appState = data;
-      save();
-      render();
-      showToast('✅ Progress imported!');
-    } catch {
-      showToast('❌ Invalid file — please use an exported progress file.');
-    }
-    event.target.value = '';
-  };
-  reader.readAsText(file);
-}
-
-function addItem() {
+window.addItem = function() {
   const labelEl = document.getElementById('new-label');
   const dateEl = document.getElementById('new-date');
   const sectionEl = document.getElementById('new-section');
   const label = labelEl.value.trim();
   if (!label) { labelEl.focus(); return; }
   appState.items.push({ id: appState.nextId++, label, date: dateEl.value.trim() || '—', section: sectionEl.value, done: false });
-  save();
+  saveToFirebase();
   labelEl.value = '';
   dateEl.value = '';
   render();
-}
+};
 
-function startEdit(id) {
+window.startEdit = function(id) {
   editingId = id;
   render();
   const inp = document.getElementById('edit-label-' + id);
   if (inp) { inp.focus(); inp.select(); }
-}
+};
 
-function saveEdit(id) {
+window.saveEdit = function(id) {
   const item = appState.items.find(i => i.id === id);
   if (!item) return;
   const newLabel = document.getElementById('edit-label-' + id).value.trim();
@@ -248,20 +239,25 @@ function saveEdit(id) {
   if (newDate) item.date = newDate;
   item.section = newSection;
   editingId = null;
-  save();
+  saveToFirebase();
   render();
-}
+};
 
-function cancelEdit() {
+window.cancelEdit = function() {
   editingId = null;
   render();
-}
+};
 
-function deleteItem(id) {
+window.deleteItem = function(id) {
   appState.items = appState.items.filter(i => i.id !== id);
-  save();
+  saveToFirebase();
   render();
-}
+};
+
+window.toggleDone = function(id) {
+  const item = appState.items.find(i => i.id === id);
+  if (item) { item.done = !item.done; saveToFirebase(); render(); }
+};
 
 function urgency(date) {
   if(date==="Done") return "done-b";
@@ -275,6 +271,7 @@ function sectionOptions(selected) {
 }
 
 function render() {
+  if (!initialized) return;
   const sections = [...new Set(appState.items.map(i=>i.section))];
   const cl = document.getElementById('checklist');
   cl.innerHTML = '';
@@ -290,7 +287,7 @@ function render() {
       d.className = 'item' + (isDone ? ' done' : '');
       if (isEditing) {
         d.innerHTML = `
-          <div class="checkbox">${isDone ? '✓' : ''}</div>
+          <div class="checkbox" onclick="toggleDone(${item.id})">${isDone ? '✓' : ''}</div>
           <div class="item-body">
             <div class="edit-row">
               <input type="text" id="edit-label-${item.id}" value="${item.label.replace(/"/g,'&quot;')}" placeholder="Description" />
@@ -300,28 +297,26 @@ function render() {
               <button class="edit-cancel-btn" onclick="cancelEdit()">Cancel</button>
             </div>
           </div>`;
-        d.querySelector('.checkbox').onclick = () => { item.done = !item.done; save(); render(); };
-        d.querySelector('#edit-label-' + item.id).addEventListener('keydown', e => {
-          if (e.key === 'Enter') saveEdit(item.id);
-          if (e.key === 'Escape') cancelEdit();
-        });
+        setTimeout(() => {
+          const inp = document.getElementById('edit-label-' + item.id);
+          if (inp) inp.addEventListener('keydown', e => {
+            if (e.key === 'Enter') saveEdit(item.id);
+            if (e.key === 'Escape') cancelEdit();
+          });
+        }, 0);
       } else {
         d.innerHTML = `
-          <div class="checkbox">${isDone ? '✓' : ''}</div>
+          <div class="checkbox" onclick="toggleDone(${item.id})">${isDone ? '✓' : ''}</div>
           <div class="item-body">
-            <div class="label">${item.label}</div>
+            <div class="label" onclick="toggleDone(${item.id})">${item.label}</div>
             <div class="item-meta">
               <span class="date-badge ${urgency(item.date)}">${item.date}</span>
             </div>
           </div>
           <div class="item-actions">
-            <button class="icon-btn" title="Edit">✏️</button>
-            <button class="icon-btn delete" title="Delete">✕</button>
+            <button class="icon-btn" onclick="startEdit(${item.id})" title="Edit">✏️</button>
+            <button class="icon-btn delete" onclick="deleteItem(${item.id})" title="Delete">✕</button>
           </div>`;
-        d.querySelector('.checkbox').onclick = () => { item.done = !item.done; save(); render(); };
-        d.querySelector('.label').onclick = () => { item.done = !item.done; save(); render(); };
-        d.querySelectorAll('.icon-btn')[0].onclick = (e) => { e.stopPropagation(); startEdit(item.id); };
-        d.querySelectorAll('.icon-btn')[1].onclick = (e) => { e.stopPropagation(); deleteItem(item.id); };
       }
       div.appendChild(d);
     });
@@ -337,8 +332,6 @@ function render() {
 
 document.getElementById('new-label').addEventListener('keydown', e => { if(e.key==='Enter') addItem(); });
 document.getElementById('new-date').addEventListener('keydown', e => { if(e.key==='Enter') addItem(); });
-
-render();
 </script>
 </body>
 </html>
