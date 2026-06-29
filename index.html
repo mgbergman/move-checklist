@@ -14,56 +14,25 @@
   .stat { flex: 1; background: #fff; border-radius: 10px; padding: .9rem; text-align: center; border: 1px solid #e5e5e5; }
   .stat-num { font-size: 1.6rem; font-weight: 600; }
   .stat-label { font-size: .75rem; color: #888; margin-top: 2px; }
-  .progress-bar { height: 6px; background: #e5e5e5; border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-bar { height: 6px; background: #e5e5e5; border-radius: 3px; margin-bottom: 2rem; overflow: hidden; }
   .progress-fill { height: 100%; background: #4a8c1c; border-radius: 3px; transition: width .3s; }
-  .sync-status { font-size: .75rem; color: #888; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 6px; }
-  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
-  .sync-dot.connected { background: #4a8c1c; }
-  .sync-dot.saving { background: #f0a030; }
-  .sync-dot.error { background: #c0392b; }
-  .add-form { background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 1rem; margin-bottom: 2rem; }
-  .add-form-title { font-size: .75rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .75rem; }
-  .add-form-row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .add-form input[type="text"] { flex: 2; min-width: 180px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: .875rem; font-family: inherit; outline: none; }
-  .add-form input[type="text"]:focus { border-color: #4a8c1c; }
-  .add-form input.date-input { flex: 0 0 100px; min-width: 80px; }
-  .add-form select { flex: 1; min-width: 130px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: .875rem; font-family: inherit; background: #fff; outline: none; }
-  .add-form select:focus { border-color: #4a8c1c; }
-  .add-btn { padding: 7px 18px; background: #4a8c1c; color: #fff; border: none; border-radius: 6px; font-size: .875rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
-  .add-btn:hover { background: #3a7015; }
   .section { margin-bottom: 1.75rem; }
   .section-header { font-size: .72rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .07em; padding-bottom: 6px; border-bottom: 1px solid #e5e5e5; margin-bottom: 8px; }
-  .item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 10px; border-radius: 8px; background: #fff; border: 1px solid #eee; margin-bottom: 5px; }
-  .item.done { opacity: .65; }
+  .item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: background .15s; background: #fff; border: 1px solid #eee; margin-bottom: 5px; }
+  .item:hover { background: #f9f9f7; }
+  .item.done { opacity: .7; }
   .item.done .label { text-decoration: line-through; color: #aaa; }
-  .checkbox { width: 18px; height: 18px; min-width: 18px; border-radius: 4px; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #fff; transition: all .15s; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
+  .checkbox { width: 18px; height: 18px; min-width: 18px; border-radius: 4px; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #fff; transition: all .15s; margin-top: 1px; }
   .item.done .checkbox { background: #4a8c1c; border-color: #4a8c1c; color: #fff; }
-  .item-body { flex: 1; min-width: 0; }
-  .label { font-size: .875rem; line-height: 1.4; cursor: pointer; }
-  .label:hover { color: #4a8c1c; }
-  .edit-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-  .edit-row input[type="text"] { flex: 2; min-width: 140px; padding: 5px 8px; border: 1px solid #4a8c1c; border-radius: 5px; font-size: .85rem; font-family: inherit; outline: none; }
-  .edit-row input.edit-date { flex: 0 0 90px; }
-  .edit-row select { flex: 1; min-width: 120px; padding: 5px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: .85rem; font-family: inherit; background: #fff; outline: none; }
-  .edit-save-btn { padding: 5px 12px; background: #4a8c1c; color: #fff; border: none; border-radius: 5px; font-size: .8rem; font-weight: 600; cursor: pointer; }
-  .edit-save-btn:hover { background: #3a7015; }
-  .edit-cancel-btn { padding: 5px 10px; background: #f0f0f0; color: #555; border: none; border-radius: 5px; font-size: .8rem; cursor: pointer; }
-  .edit-cancel-btn:hover { background: #e0e0e0; }
-  .item-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
-  .date-badge { font-size: .7rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; background: #f0f0f0; color: #666; border: 1px solid #e0e0e0; }
+  .label { font-size: .875rem; line-height: 1.4; flex: 1; }
+  .date-badge { font-size: .7rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; background: #f0f0f0; color: #666; border: 1px solid #e0e0e0; margin-top: 1px; }
   .date-badge.urgent { background: #fff0ed; color: #b03a1a; border-color: #f0a090; }
   .date-badge.soon { background: #fff8e6; color: #8a5200; border-color: #f0c060; }
   .date-badge.done-b { background: #eef6e4; color: #3a6e10; border-color: #90c050; }
-  .item-actions { display: flex; gap: 4px; flex-shrink: 0; margin-top: 1px; }
-  .icon-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 13px; padding: 2px 4px; border-radius: 4px; line-height: 1; transition: color .15s, background .15s; }
-  .icon-btn:hover { color: #555; background: #f0f0f0; }
-  .icon-btn.delete:hover { color: #b03a1a; background: #fff0ed; }
-  .loading { text-align: center; padding: 3rem; color: #888; font-size: .9rem; }
   @media print {
     body { background: #fff; padding: .5rem; }
     .item { break-inside: avoid; }
     .section { break-inside: avoid; }
-    .add-form, .item-actions, .sync-status { display: none; }
   }
 </style>
 </head>
@@ -72,266 +41,159 @@
   <h1>🇮🇱 → 🇮🇹 Move Checklist</h1>
   <p class="subtitle">Marc & Kat — Departing Jerusalem July 31, 2026</p>
   <div class="stats">
-    <div class="stat"><div class="stat-num" id="done-count">—</div><div class="stat-label">Done</div></div>
-    <div class="stat"><div class="stat-num" id="todo-count">—</div><div class="stat-label">To do</div></div>
-    <div class="stat"><div class="stat-num" id="pct">—</div><div class="stat-label">Complete</div></div>
+    <div class="stat"><div class="stat-num" id="done-count">0</div><div class="stat-label">Done</div></div>
+    <div class="stat"><div class="stat-num" id="todo-count">0</div><div class="stat-label">To do</div></div>
+    <div class="stat"><div class="stat-num" id="pct">0%</div><div class="stat-label">Complete</div></div>
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
-  <div class="sync-status"><div class="sync-dot" id="sync-dot"></div><span id="sync-label">Connecting…</span></div>
-
-  <div class="add-form">
-    <div class="add-form-title">➕ Add item</div>
-    <div class="add-form-row">
-      <input type="text" id="new-label" placeholder="Item description…" />
-      <input type="text" id="new-date" class="date-input" placeholder="Date (e.g. 7/15)" />
-      <select id="new-section">
-        <option value="Done / In Progress">Done / In Progress</option>
-        <option value="June">June</option>
-        <option value="Pending / ASAP">Pending / ASAP</option>
-        <option value="July 1">July 1</option>
-        <option value="July 9–15">July 9–15</option>
-        <option value="Late July">Late July</option>
-        <option value="August — Cyclops">August — Cyclops</option>
-        <option value="Italy — On Arrival">Italy — On Arrival</option>
-        <option value="Post-Move" selected>Post-Move</option>
-      </select>
-      <button class="add-btn" onclick="addItem()">+ Add</button>
-    </div>
-  </div>
-
-  <div id="checklist"><div class="loading">Loading checklist…</div></div>
+  <div id="checklist"></div>
 </div>
+<script>
+// sortDate: numeric key for ordering (YYYYMMDD or special values)
+// 0        = Done (already completed)
+// 1        = ASAP / Before move (float to top of active items)
+// 20260620 = specific dates in 2026
+// 99999999 = open-ended future ("On arrival", "First month", etc.)
+const items = [
+  // ── Completed ──────────────────────────────────────────────────────────────
+  {id:2,  label:"Default judgement filed (6/4)",               date:"Done",        sortDate:0,        done:true},
+  {id:3,  label:"Cyclops cat hotel booked 7/30–8/5 — started", date:"Done",        sortDate:0,        done:true},
+  {id:4,  label:"Follow up on move date (followed up 6/7)",    date:"Done",        sortDate:0,        done:true},
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  // ── ASAP / Before move ─────────────────────────────────────────────────────
+  {id:42, label:"Start Kat visa (Italy)",                                           date:"Before move",sortDate:1,        done:false},
+  {id:43, label:"Insurance proof (Italy)",                                           date:"Before move",sortDate:1,        done:false},
+  {id:6,  label:"Consult Israeli pension advisor (urgent — triggers on emigration)", date:"ASAP",       sortDate:1,        done:false},
+  {id:7,  label:"Consult Israeli accountant (pension withdrawal timing)",            date:"ASAP",       sortDate:1,        done:false},
+  {id:8,  label:"Consult expat tax specialist (US-Italy arrangements)",              date:"ASAP",       sortDate:1,        done:false},
+  {id:11, label:"EU Pet Passports — Sunshine & Tiger",                               date:"ASAP",       sortDate:1,        done:false},
+  {id:12, label:"EU Pet Passport — Cyclops",                                         date:"ASAP",       sortDate:1,        done:false},
+  {id:13, label:"EU vet health certificates — Sunshine & Tiger (for 7/31 flight)",  date:"ASAP",       sortDate:1,        done:false},
+  {id:15, label:"Reserve El Al cargo — Sunshine & Tiger (7/31 flight)",             date:"ASAP",       sortDate:1,        done:false},
+  {id:16, label:"Reserve El Al cargo — Cyclops (8/25 flight)",                      date:"ASAP",       sortDate:1,        done:false},
+  {id:17, label:"Car detailing before listing photos (Final Touch / Detail-tech)",  date:"ASAP",       sortDate:1,        done:false},
+  {id:18, label:"What to do with unsold items",                                      date:"ASAP",       sortDate:1,        done:false},
+  {id:19, label:"Health insurance — finalize coverage",                              date:"ASAP",       sortDate:1,        done:false},
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC2DRXM70zLdAkFTESI81vHGE7D57Ob3Yc",
-  authDomain: "move-checklist-b3bf7.firebaseapp.com",
-  databaseURL: "https://move-checklist-b3bf7-default-rtdb.firebaseio.com",
-  projectId: "move-checklist-b3bf7",
-  storageBucket: "move-checklist-b3bf7.firebasestorage.app",
-  messagingSenderId: "797017835162",
-  appId: "1:797017835162:web:7420b4c5a65ab360d78123"
-};
+  // ── June ───────────────────────────────────────────────────────────────────
+  {id:5,  label:"Dorm applications open — submit application",                      date:"6/20",       sortDate:20260620, done:false},
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const checklistRef = ref(db, 'checklist');
+  // ── July 1 ─────────────────────────────────────────────────────────────────
+  {id:20, label:"Stop utilities & phone (cancel Fiber)",                            date:"7/1",        sortDate:20260701, done:false},
+  {id:21, label:"Transfer Social Security",                                          date:"7/1",        sortDate:20260701, done:false},
+  {id:22, label:"Put car up for sale",                                               date:"7/1",        sortDate:20260701, done:false},
+  {id:23, label:"Offer July items on Facebook",                                      date:"7/1",        sortDate:20260701, done:false},
 
-const SECTIONS = [
-  "Done / In Progress","June","Pending / ASAP","July 1","July 9–15",
-  "Late July","August — Cyclops","Italy — On Arrival","Post-Move"
+  // ── By 7/10 ────────────────────────────────────────────────────────────────
+  {id:9,  label:"Rabies vaccinations — Sunshine & Tiger (21 days before 7/31 flight)", date:"By 7/10", sortDate:20260710, done:false},
+
+  // ── July 9–15 ──────────────────────────────────────────────────────────────
+  {id:24, label:"File for Natalee money",                                            date:"7/9",        sortDate:20260709, done:false},
+  {id:25, label:"Get health insurance (Kat)",                                        date:"7/15",       sortDate:20260715, done:false},
+  {id:26, label:"Offer unsold items for free",                                       date:"7/15",       sortDate:20260715, done:false},
+  {id:27, label:"Fill final prescriptions",                                          date:"7/15",       sortDate:20260715, done:false},
+
+  // ── Late July ──────────────────────────────────────────────────────────────
+  {id:28, label:"Cat vet appointment — Sunshine, Tiger & Cyclops (fill out Cyclops sheet)", date:"7/23", sortDate:20260723, done:false},
+  {id:29, label:"Court date",                                                        date:"7/27",       sortDate:20260727, done:false},
+  {id:30, label:"Car handover / pickup",                                             date:"7/29–30",    sortDate:20260729, done:false},
+  {id:31, label:"Cyclops to cat hotel",                                              date:"7/30",       sortDate:20260730, done:false},
+  {id:32, label:"El Al flight — depart Israel (Sunshine & Tiger)",                  date:"7/31",       sortDate:20260731, done:false},
+
+  // ── August — Cyclops ───────────────────────────────────────────────────────
+  {id:10, label:"Rabies vaccination — Cyclops (21 days before 8/25 flight)",        date:"By 8/4",     sortDate:20260804, done:false},
+  {id:33, label:"Cyclops collected from cat hotel by daughter",                      date:"8/5",        sortDate:20260805, done:false},
+  {id:34, label:"Cyclops with daughter until flight",                                date:"8/5–8/25",   sortDate:20260806, done:false},
+  {id:14, label:"EU vet health certificate — Cyclops (for 8/25 flight)",            date:"Before 8/25",sortDate:20260820, done:false},
+  {id:35, label:"El Al flight — Cyclops flies to Italy with daughter",               date:"8/25",       sortDate:20260825, done:false},
+
+  // ── Post-Move (August) ─────────────────────────────────────────────────────
+  {id:1,  label:"Codice fiscale — Kat (sent 6/7, follow up)",                       date:"August",     sortDate:20260801, done:false},
+  {id:40, label:"File Form 629 with Bituach Leumi",                                  date:"August",     sortDate:20260801, done:false},
+  {id:41, label:"Stop supplemental Maccabi tier",                                    date:"August",     sortDate:20260801, done:false},
+
+  // ── Italy — On Arrival ─────────────────────────────────────────────────────
+  {id:36, label:"Register residency in Montecilfone",                                date:"On arrival", sortDate:20260801, done:false},
+  {id:37, label:"Enroll in SSN (Italian national health service)",                   date:"On arrival", sortDate:20260801, done:false},
+  {id:38, label:"Consult commercialista re: 7% flat tax regime",                     date:"On arrival", sortDate:20260801, done:false},
+  {id:39, label:"Find autoscuola in Termoli/Campobasso (Italian driving license)",   date:"First month",sortDate:20260901, done:false},
+
+  // ── October ────────────────────────────────────────────────────────────────
+  {id:44, label:"Dorms open — Zoe school starts",                                    date:"10/10–10/11",sortDate:20261010, done:false},
+
+  // ── December ───────────────────────────────────────────────────────────────
+  {id:45, label:"US taxes 2026 — file / pay",                                        date:"12/15",      sortDate:20261215, done:false},
 ];
 
-const defaultItems = [
-  {id:2,  label:"Default judgement filed (6/4)", date:"Done", section:"Done / In Progress", done:true},
-  {id:3,  label:"Cyclops cat hotel booked 7/30–8/5 — started", date:"Done", section:"Done / In Progress", done:true},
-  {id:4,  label:"Follow up on move date (followed up 6/7)", date:"Done", section:"Done / In Progress", done:true},
-  {id:5,  label:"Dorm applications open — submit application", date:"6/20", section:"June", done:false},
-  {id:6,  label:"Consult Israeli pension advisor (urgent — triggers on emigration)", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:7,  label:"Consult Israeli accountant (pension withdrawal timing)", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:8,  label:"Consult expat tax specialist (US-Italy arrangements)", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:9,  label:"Rabies vaccinations — Sunshine & Tiger (21 days before 7/31 flight)", date:"By 7/10", section:"Pending / ASAP", done:false},
-  {id:10, label:"Rabies vaccination — Cyclops (21 days before 8/25 flight)", date:"By 8/4", section:"Pending / ASAP", done:false},
-  {id:11, label:"EU Pet Passports — Sunshine & Tiger", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:12, label:"EU Pet Passport — Cyclops", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:13, label:"EU vet health certificates — Sunshine & Tiger (for 7/31 flight)", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:14, label:"EU vet health certificate — Cyclops (for 8/25 flight)", date:"Before 8/25", section:"Pending / ASAP", done:false},
-  {id:15, label:"Reserve El Al cargo — Sunshine & Tiger (7/31 flight)", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:16, label:"Reserve El Al cargo — Cyclops (8/25 flight)", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:17, label:"Car detailing before listing photos (Final Touch / Detail-tech)", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:18, label:"What to do with unsold items", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:19, label:"Health insurance — finalize coverage", date:"ASAP", section:"Pending / ASAP", done:false},
-  {id:20, label:"Stop utilities & phone (cancel Fiber)", date:"7/1", section:"July 1", done:false},
-  {id:21, label:"Transfer Social Security", date:"7/1", section:"July 1", done:false},
-  {id:22, label:"Put car up for sale", date:"7/1", section:"July 1", done:false},
-  {id:23, label:"Offer July items on Facebook", date:"7/1", section:"July 1", done:false},
-  {id:24, label:"File for Natalee money", date:"7/9", section:"July 9–15", done:false},
-  {id:25, label:"Get health insurance (Kat)", date:"7/15", section:"July 9–15", done:false},
-  {id:26, label:"Offer unsold items for free", date:"7/15", section:"July 9–15", done:false},
-  {id:27, label:"Fill final prescriptions", date:"7/15", section:"July 9–15", done:false},
-  {id:28, label:"Cat vet appointment — Sunshine, Tiger & Cyclops (fill out Cyclops sheet)", date:"7/23", section:"Late July", done:false},
-  {id:29, label:"Court date", date:"7/27", section:"Late July", done:false},
-  {id:30, label:"Car handover / pickup", date:"7/29–30", section:"Late July", done:false},
-  {id:31, label:"Cyclops to cat hotel", date:"7/30", section:"Late July", done:false},
-  {id:32, label:"El Al flight — depart Israel (Sunshine & Tiger)", date:"7/31", section:"Late July", done:false},
-  {id:33, label:"Cyclops collected from cat hotel by daughter", date:"8/5", section:"August — Cyclops", done:false},
-  {id:34, label:"Cyclops with daughter until flight", date:"8/5–8/25", section:"August — Cyclops", done:false},
-  {id:35, label:"El Al flight — Cyclops flies to Italy with daughter", date:"8/25", section:"August — Cyclops", done:false},
-  {id:36, label:"Register residency in Montecilfone", date:"On arrival", section:"Italy — On Arrival", done:false},
-  {id:37, label:"Enroll in SSN (Italian national health service)", date:"On arrival", section:"Italy — On Arrival", done:false},
-  {id:38, label:"Consult commercialista re: 7% flat tax regime", date:"On arrival", section:"Italy — On Arrival", done:false},
-  {id:39, label:"Find autoscuola in Termoli/Campobasso (Italian driving license)", date:"First month", section:"Italy — On Arrival", done:false},
-  {id:1,  label:"Codice fiscale — Kat (sent 6/7, follow up)", date:"August", section:"Post-Move", done:false},
-  {id:40, label:"File Form 629 with Bituach Leumi", date:"August", section:"Post-Move", done:false},
-  {id:41, label:"Stop supplemental Maccabi tier", date:"August", section:"Post-Move", done:false},
-  {id:42, label:"Start Kat visa (Italy)", date:"Before move", section:"Post-Move", done:false},
-  {id:43, label:"Insurance proof (Italy)", date:"Before move", section:"Post-Move", done:false},
-  {id:44, label:"Dorms open — Zoe school starts", date:"10/10–10/11", section:"Post-Move", done:false},
-  {id:45, label:"US taxes 2026 — file / pay", date:"12/15", section:"Post-Move", done:false},
-];
+// Load saved state
+const saved = JSON.parse(localStorage.getItem('checklist_state') || '{}');
+const state = {};
+items.forEach(i => state[i.id] = saved[i.id] !== undefined ? saved[i.id] : i.done);
 
-let appState = { items: [], nextId: 100 };
-let editingId = null;
-let initialized = false;
-
-function setSyncStatus(status) {
-  const dot = document.getElementById('sync-dot');
-  const label = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + status;
-  if (status === 'connected') label.textContent = 'Synced';
-  else if (status === 'saving') label.textContent = 'Saving…';
-  else if (status === 'error') label.textContent = 'Connection error';
-  else label.textContent = 'Connecting…';
+function save() {
+  localStorage.setItem('checklist_state', JSON.stringify(state));
 }
 
-// Listen for real-time updates from Firebase
-onValue(checklistRef, (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    appState = data;
-  } else {
-    // First time — seed with defaults
-    appState = { items: JSON.parse(JSON.stringify(defaultItems)), nextId: 100 };
-    set(checklistRef, appState);
-  }
-  initialized = true;
-  setSyncStatus('connected');
-  render();
-}, (error) => {
-  setSyncStatus('error');
-});
-
-function saveToFirebase() {
-  setSyncStatus('saving');
-  set(checklistRef, appState).then(() => setSyncStatus('connected'));
+// Section label derived from sortDate
+function sectionFor(item) {
+  const s = item.sortDate;
+  if (s === 0)        return "✓ Done / In Progress";
+  if (s === 1)        return "⚡ ASAP / Before Move";
+  if (s <= 20260620)  return "June";
+  if (s <= 20260701)  return "July 1";
+  if (s <= 20260710)  return "By July 10";
+  if (s <= 20260715)  return "July 9–15";
+  if (s <= 20260731)  return "Late July";
+  if (s <= 20260825)  return "August — Cyclops & Post-Move";
+  if (s <= 20260930)  return "Italy — On Arrival / First Month";
+  if (s <= 20261031)  return "October";
+  return "December";
 }
-
-window.addItem = function() {
-  const labelEl = document.getElementById('new-label');
-  const dateEl = document.getElementById('new-date');
-  const sectionEl = document.getElementById('new-section');
-  const label = labelEl.value.trim();
-  if (!label) { labelEl.focus(); return; }
-  appState.items.push({ id: appState.nextId++, label, date: dateEl.value.trim() || '—', section: sectionEl.value, done: false });
-  saveToFirebase();
-  labelEl.value = '';
-  dateEl.value = '';
-  render();
-};
-
-window.startEdit = function(id) {
-  editingId = id;
-  render();
-  const inp = document.getElementById('edit-label-' + id);
-  if (inp) { inp.focus(); inp.select(); }
-};
-
-window.saveEdit = function(id) {
-  const item = appState.items.find(i => i.id === id);
-  if (!item) return;
-  const newLabel = document.getElementById('edit-label-' + id).value.trim();
-  const newDate = document.getElementById('edit-date-' + id).value.trim();
-  const newSection = document.getElementById('edit-section-' + id).value;
-  if (newLabel) item.label = newLabel;
-  if (newDate) item.date = newDate;
-  item.section = newSection;
-  editingId = null;
-  saveToFirebase();
-  render();
-};
-
-window.cancelEdit = function() {
-  editingId = null;
-  render();
-};
-
-window.deleteItem = function(id) {
-  appState.items = appState.items.filter(i => i.id !== id);
-  saveToFirebase();
-  render();
-};
-
-window.toggleDone = function(id) {
-  const item = appState.items.find(i => i.id === id);
-  if (item) { item.done = !item.done; saveToFirebase(); render(); }
-};
 
 function urgency(date) {
-  if(date==="Done") return "done-b";
-  if(date==="ASAP"||date==="By 7/10"||date==="By 8/4") return "urgent";
-  if(["6/20","7/1"].includes(date)) return "soon";
+  if (date === "Done") return "done-b";
+  if (["ASAP","By 7/10","By 8/4","Before move"].includes(date)) return "urgent";
+  if (["6/20","7/1"].includes(date)) return "soon";
   return "";
 }
 
-function sectionOptions(selected) {
-  return SECTIONS.map(s => `<option value="${s}"${s===selected?' selected':''}>${s}</option>`).join('');
-}
-
 function render() {
-  if (!initialized) return;
-  const sections = [...new Set(appState.items.map(i=>i.section))];
+  // Sort items by sortDate, then by original array order within same sortDate
+  const sorted = [...items].sort((a, b) => a.sortDate - b.sortDate);
+
+  // Build ordered section list preserving first-seen order
+  const sectionOrder = [];
+  sorted.forEach(i => {
+    const sec = sectionFor(i);
+    if (!sectionOrder.includes(sec)) sectionOrder.push(sec);
+  });
+
   const cl = document.getElementById('checklist');
   cl.innerHTML = '';
-  sections.forEach(sec => {
-    const secItems = appState.items.filter(i=>i.section===sec);
+  sectionOrder.forEach(sec => {
+    const secItems = sorted.filter(i => sectionFor(i) === sec);
     const div = document.createElement('div');
     div.className = 'section';
     div.innerHTML = `<div class="section-header">${sec}</div>`;
     secItems.forEach(item => {
-      const isDone = item.done;
-      const isEditing = editingId === item.id;
+      const isDone = state[item.id];
       const d = document.createElement('div');
       d.className = 'item' + (isDone ? ' done' : '');
-      if (isEditing) {
-        d.innerHTML = `
-          <div class="checkbox" onclick="toggleDone(${item.id})">${isDone ? '✓' : ''}</div>
-          <div class="item-body">
-            <div class="edit-row">
-              <input type="text" id="edit-label-${item.id}" value="${item.label.replace(/"/g,'&quot;')}" placeholder="Description" />
-              <input type="text" id="edit-date-${item.id}" class="edit-date" value="${item.date}" placeholder="Date" />
-              <select id="edit-section-${item.id}">${sectionOptions(item.section)}</select>
-              <button class="edit-save-btn" onclick="saveEdit(${item.id})">Save</button>
-              <button class="edit-cancel-btn" onclick="cancelEdit()">Cancel</button>
-            </div>
-          </div>`;
-        setTimeout(() => {
-          const inp = document.getElementById('edit-label-' + item.id);
-          if (inp) inp.addEventListener('keydown', e => {
-            if (e.key === 'Enter') saveEdit(item.id);
-            if (e.key === 'Escape') cancelEdit();
-          });
-        }, 0);
-      } else {
-        d.innerHTML = `
-          <div class="checkbox" onclick="toggleDone(${item.id})">${isDone ? '✓' : ''}</div>
-          <div class="item-body">
-            <div class="label" onclick="toggleDone(${item.id})">${item.label}</div>
-            <div class="item-meta">
-              <span class="date-badge ${urgency(item.date)}">${item.date}</span>
-            </div>
-          </div>
-          <div class="item-actions">
-            <button class="icon-btn" onclick="startEdit(${item.id})" title="Edit">✏️</button>
-            <button class="icon-btn delete" onclick="deleteItem(${item.id})" title="Delete">✕</button>
-          </div>`;
-      }
+      d.innerHTML = `<div class="checkbox">${isDone ? '✓' : ''}</div><div class="label">${item.label}</div><div class="date-badge ${urgency(item.date)}">${item.date}</div>`;
+      d.onclick = () => { state[item.id] = !state[item.id]; save(); render(); };
       div.appendChild(d);
     });
     cl.appendChild(div);
   });
-  const total = appState.items.length;
-  const done = appState.items.filter(i=>i.done).length;
+
+  const total = items.length;
+  const done = items.filter(i => state[i.id]).length;
   document.getElementById('done-count').textContent = done;
   document.getElementById('todo-count').textContent = total - done;
-  document.getElementById('pct').textContent = Math.round(done/total*100) + '%';
-  document.getElementById('progress').style.width = (done/total*100) + '%';
+  document.getElementById('pct').textContent = Math.round(done / total * 100) + '%';
+  document.getElementById('progress').style.width = (done / total * 100) + '%';
 }
-
-document.getElementById('new-label').addEventListener('keydown', e => { if(e.key==='Enter') addItem(); });
-document.getElementById('new-date').addEventListener('keydown', e => { if(e.key==='Enter') addItem(); });
+render();
 </script>
 </body>
 </html>
