@@ -75,6 +75,15 @@
 
   let appState = null;
   let editingId = null;
+  let hideDone = false;
+
+  window.toggleHideDone = function() {
+    hideDone = !hideDone;
+    const btn = document.getElementById('hide-btn');
+    btn.textContent = hideDone ? 'Show completed' : 'Hide completed';
+    btn.classList.toggle('active', hideDone);
+    render();
+  };
 
   function sectionFor(item) {
     const s = item.sortDate;
@@ -132,7 +141,8 @@
 
   function render() {
     if (!appState) return;
-    const sorted = [...appState.items].sort((a, b) => {
+    const visibleItems = hideDone ? appState.items.filter(i => !i.done) : appState.items;
+    const sorted = [...visibleItems].sort((a, b) => {
       if (a.sortDate !== b.sortDate) return a.sortDate - b.sortDate;
       return a.id - b.id;
     });
@@ -300,6 +310,10 @@
   .icon-btn:hover { color: #555; background: #f0f0f0; }
   .icon-btn.delete:hover { color: #b03a1a; background: #fff0ed; }
   #status { font-size: .75rem; color: #aaa; text-align: center; margin-bottom: 1rem; }
+  .toolbar { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+  .toggle-btn { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 6px 14px; font-size: .8rem; font-weight: 600; color: #555; cursor: pointer; transition: background .15s, border-color .15s; }
+  .toggle-btn:hover { background: #f0f0f0; }
+  .toggle-btn.active { background: #eef6e4; border-color: #90c050; color: #3a6e10; }
   @media print {
     body { background: #fff; padding: .5rem; }
     .item { break-inside: avoid; }
@@ -319,6 +333,9 @@
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
   <p id="status">Connecting…</p>
+  <div class="toolbar">
+    <button class="toggle-btn" id="hide-btn" onclick="toggleHideDone()">Hide completed</button>
+  </div>
   <div class="add-form">
     <div class="add-form-title">➕ Add item</div>
     <div class="add-form-row">
