@@ -258,6 +258,15 @@
       persist();
     } else {
       appState = data;
+      // Migration: fill in sortDate for any items missing it
+      let needsSave = false;
+      appState.items.forEach(item => {
+        if (item.sortDate === undefined || item.sortDate === null) {
+          item.sortDate = parseSortDate(item.date);
+          needsSave = true;
+        }
+      });
+      if (needsSave) persist();
     }
     render();
   });
