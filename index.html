@@ -4,6 +4,260 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Move to Italy Checklist — Marc & Kat</title>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDemo",
+    authDomain: "move-checklist-b3bf7.firebaseapp.com",
+    databaseURL: "https://move-checklist-b3bf7-default-rtdb.firebaseio.com",
+    projectId: "move-checklist-b3bf7",
+    storageBucket: "move-checklist-b3bf7.appspot.com",
+    messagingSenderId: "000000000000",
+    appId: "1:000000000000:web:000000000000"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const dbRef = ref(db, 'checklist');
+
+  const DEFAULTS = {
+    nextId: 46,
+    items: [
+      {id:2,  label:"Default judgement filed (6/4)",                                          date:"Done",        sortDate:0,        done:true},
+      {id:3,  label:"Cyclops cat hotel booked 7/30–8/5 — started",                            date:"Done",        sortDate:0,        done:true},
+      {id:4,  label:"Follow up on move date (followed up 6/7)",                               date:"Done",        sortDate:0,        done:true},
+      {id:42, label:"Start Kat visa (Italy)",                                                  date:"Before move", sortDate:1,        done:false},
+      {id:43, label:"Insurance proof (Italy)",                                                 date:"Before move", sortDate:1,        done:false},
+      {id:6,  label:"Consult Israeli pension advisor (urgent — triggers on emigration)",       date:"ASAP",        sortDate:1,        done:false},
+      {id:7,  label:"Consult Israeli accountant (pension withdrawal timing)",                  date:"ASAP",        sortDate:1,        done:false},
+      {id:8,  label:"Consult expat tax specialist (US-Italy arrangements)",                    date:"ASAP",        sortDate:1,        done:false},
+      {id:11, label:"EU Pet Passports — Sunshine & Tiger",                                     date:"ASAP",        sortDate:1,        done:false},
+      {id:12, label:"EU Pet Passport — Cyclops",                                               date:"ASAP",        sortDate:1,        done:false},
+      {id:13, label:"EU vet health certificates — Sunshine & Tiger (for 7/31 flight)",        date:"ASAP",        sortDate:1,        done:false},
+      {id:15, label:"Reserve El Al cargo — Sunshine & Tiger (7/31 flight)",                   date:"ASAP",        sortDate:1,        done:false},
+      {id:16, label:"Reserve El Al cargo — Cyclops (8/25 flight)",                            date:"ASAP",        sortDate:1,        done:false},
+      {id:17, label:"Car detailing before listing photos (Final Touch / Detail-tech)",         date:"ASAP",        sortDate:1,        done:false},
+      {id:18, label:"What to do with unsold items",                                            date:"ASAP",        sortDate:1,        done:false},
+      {id:19, label:"Health insurance — finalize coverage",                                    date:"ASAP",        sortDate:1,        done:false},
+      {id:5,  label:"Dorm applications open — submit application",                             date:"6/20",        sortDate:20260620, done:false},
+      {id:20, label:"Stop utilities & phone (cancel Fiber)",                                   date:"7/1",         sortDate:20260701, done:false},
+      {id:21, label:"Transfer Social Security",                                                date:"7/1",         sortDate:20260701, done:false},
+      {id:22, label:"Put car up for sale",                                                     date:"7/1",         sortDate:20260701, done:false},
+      {id:23, label:"Offer July items on Facebook",                                            date:"7/1",         sortDate:20260701, done:false},
+      {id:9,  label:"Rabies vaccinations — Sunshine & Tiger (21 days before 7/31 flight)",    date:"By 7/10",     sortDate:20260710, done:false},
+      {id:24, label:"File for Natalee money",                                                  date:"7/9",         sortDate:20260709, done:false},
+      {id:25, label:"Get health insurance (Kat)",                                              date:"7/15",        sortDate:20260715, done:false},
+      {id:26, label:"Offer unsold items for free",                                             date:"7/15",        sortDate:20260715, done:false},
+      {id:27, label:"Fill final prescriptions",                                                date:"7/15",        sortDate:20260715, done:false},
+      {id:28, label:"Cat vet appointment — Sunshine, Tiger & Cyclops (fill out Cyclops sheet)",date:"7/23",        sortDate:20260723, done:false},
+      {id:29, label:"Court date",                                                              date:"7/27",        sortDate:20260727, done:false},
+      {id:30, label:"Car handover / pickup",                                                   date:"7/29–30",     sortDate:20260729, done:false},
+      {id:31, label:"Cyclops to cat hotel",                                                    date:"7/30",        sortDate:20260730, done:false},
+      {id:32, label:"El Al flight — depart Israel (Sunshine & Tiger)",                        date:"7/31",        sortDate:20260731, done:false},
+      {id:10, label:"Rabies vaccination — Cyclops (21 days before 8/25 flight)",              date:"By 8/4",      sortDate:20260804, done:false},
+      {id:33, label:"Cyclops collected from cat hotel by daughter",                            date:"8/5",         sortDate:20260805, done:false},
+      {id:34, label:"Cyclops with daughter until flight",                                      date:"8/5–8/25",    sortDate:20260806, done:false},
+      {id:14, label:"EU vet health certificate — Cyclops (for 8/25 flight)",                  date:"Before 8/25", sortDate:20260820, done:false},
+      {id:35, label:"El Al flight — Cyclops flies to Italy with daughter",                     date:"8/25",        sortDate:20260825, done:false},
+      {id:1,  label:"Codice fiscale — Kat (sent 6/7, follow up)",                             date:"August",      sortDate:20260801, done:false},
+      {id:40, label:"File Form 629 with Bituach Leumi",                                        date:"August",      sortDate:20260801, done:false},
+      {id:41, label:"Stop supplemental Maccabi tier",                                          date:"August",      sortDate:20260801, done:false},
+      {id:36, label:"Register residency in Montecilfone",                                      date:"On arrival",  sortDate:20260801, done:false},
+      {id:37, label:"Enroll in SSN (Italian national health service)",                         date:"On arrival",  sortDate:20260801, done:false},
+      {id:38, label:"Consult commercialista re: 7% flat tax regime",                           date:"On arrival",  sortDate:20260801, done:false},
+      {id:39, label:"Find autoscuola in Termoli/Campobasso (Italian driving license)",         date:"First month", sortDate:20260901, done:false},
+      {id:44, label:"Dorms open — Zoe school starts",                                          date:"10/10–10/11", sortDate:20261010, done:false},
+      {id:45, label:"US taxes 2026 — file / pay",                                              date:"12/15",       sortDate:20261215, done:false},
+    ]
+  };
+
+  let appState = null;
+  let editingId = null;
+
+  function sectionFor(item) {
+    const s = item.sortDate;
+    if (s === 0)        return "✓ Done / In Progress";
+    if (s === 1)        return "⚡ ASAP / Before Move";
+    if (s <= 20260620)  return "June";
+    if (s <= 20260701)  return "July 1";
+    if (s <= 20260710)  return "By July 10";
+    if (s <= 20260715)  return "July 9–15";
+    if (s <= 20260731)  return "Late July";
+    if (s <= 20260825)  return "August — Cyclops & Post-Move";
+    if (s <= 20260930)  return "Italy — On Arrival / First Month";
+    if (s <= 20261031)  return "October";
+    return "December";
+  }
+
+  function urgency(date) {
+    if (date === "Done") return "done-b";
+    if (["ASAP","By 7/10","By 8/4","Before move","Before 8/25"].includes(date)) return "urgent";
+    if (["6/20","7/1"].includes(date)) return "soon";
+    return "";
+  }
+
+  function persist() {
+    set(dbRef, appState);
+  }
+
+  function parseSortDate(dateStr) {
+    // Try to parse common patterns to a sortDate number
+    if (!dateStr || dateStr === "ASAP" || dateStr.toLowerCase().includes("before move")) return 1;
+    if (dateStr === "Done") return 0;
+    if (dateStr.toLowerCase().includes("arrival") || dateStr.toLowerCase().includes("first month")) return 20260801;
+    // m/d or m/d-d patterns
+    const simple = dateStr.match(/^(\d{1,2})\/(\d{1,2})/);
+    if (simple) {
+      const m = parseInt(simple[1]);
+      const d = parseInt(simple[2]);
+      const yr = 2026;
+      return yr * 10000 + m * 100 + d;
+    }
+    // "By m/d"
+    const byDate = dateStr.match(/By\s+(\d{1,2})\/(\d{1,2})/i);
+    if (byDate) {
+      const m = parseInt(byDate[1]);
+      const d = parseInt(byDate[2]);
+      return 2026 * 10000 + m * 100 + d;
+    }
+    // Month name only
+    const months = {january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12};
+    for (const [name, num] of Object.entries(months)) {
+      if (dateStr.toLowerCase().includes(name)) return 2026 * 10000 + num * 100 + 1;
+    }
+    return 99999999;
+  }
+
+  function render() {
+    if (!appState) return;
+    const sorted = [...appState.items].sort((a, b) => {
+      if (a.sortDate !== b.sortDate) return a.sortDate - b.sortDate;
+      return a.id - b.id;
+    });
+
+    const sectionOrder = [];
+    sorted.forEach(i => {
+      const sec = sectionFor(i);
+      if (!sectionOrder.includes(sec)) sectionOrder.push(sec);
+    });
+
+    const cl = document.getElementById('checklist');
+    cl.innerHTML = '';
+    sectionOrder.forEach(sec => {
+      const secItems = sorted.filter(i => sectionFor(i) === sec);
+      const div = document.createElement('div');
+      div.className = 'section';
+      div.innerHTML = `<div class="section-header">${sec}</div>`;
+      secItems.forEach(item => {
+        const d = document.createElement('div');
+        if (editingId === item.id) {
+          d.className = 'item edit-row';
+          d.innerHTML = `
+            <input class="edit-label" id="edit-label-${item.id}" value="${item.label.replace(/"/g,'&quot;')}" />
+            <input class="edit-date" id="edit-date-${item.id}" value="${item.date}" placeholder="Date" />
+            <button class="icon-btn save-btn" onclick="saveEdit(${item.id})">💾</button>
+            <button class="icon-btn" onclick="cancelEdit()">✕</button>`;
+        } else {
+          d.className = 'item' + (item.done ? ' done' : '');
+          d.innerHTML = `
+            <div class="checkbox" onclick="toggleDone(${item.id})">${item.done ? '✓' : ''}</div>
+            <div class="label" onclick="toggleDone(${item.id})">${item.label}</div>
+            <div class="date-badge ${urgency(item.date)}">${item.date}</div>
+            <div class="item-actions">
+              <button class="icon-btn" onclick="startEdit(${item.id})" title="Edit">✏️</button>
+              <button class="icon-btn delete" onclick="deleteItem(${item.id})" title="Delete">✕</button>
+            </div>`;
+        }
+        div.appendChild(d);
+      });
+      cl.appendChild(div);
+    });
+
+    const total = appState.items.length;
+    const done = appState.items.filter(i => i.done).length;
+    document.getElementById('done-count').textContent = done;
+    document.getElementById('todo-count').textContent = total - done;
+    document.getElementById('pct').textContent = Math.round(done / total * 100) + '%';
+    document.getElementById('progress').style.width = (done / total * 100) + '%';
+
+    // re-focus edit field if editing
+    if (editingId !== null) {
+      const el = document.getElementById(`edit-label-${editingId}`);
+      if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+    }
+  }
+
+  window.toggleDone = function(id) {
+    const item = appState.items.find(i => i.id === id);
+    if (item) { item.done = !item.done; persist(); render(); }
+  };
+
+  window.startEdit = function(id) {
+    editingId = id;
+    render();
+  };
+
+  window.cancelEdit = function() {
+    editingId = null;
+    render();
+  };
+
+  window.saveEdit = function(id) {
+    const labelEl = document.getElementById(`edit-label-${id}`);
+    const dateEl = document.getElementById(`edit-date-${id}`);
+    const item = appState.items.find(i => i.id === id);
+    if (item && labelEl) {
+      item.label = labelEl.value.trim() || item.label;
+      item.date = dateEl.value.trim() || item.date;
+      item.sortDate = parseSortDate(item.date);
+    }
+    editingId = null;
+    persist();
+    render();
+  };
+
+  window.deleteItem = function(id) {
+    if (!confirm('Delete this item?')) return;
+    appState.items = appState.items.filter(i => i.id !== id);
+    persist();
+    render();
+  };
+
+  window.addItem = function() {
+    const labelEl = document.getElementById('new-label');
+    const dateEl = document.getElementById('new-date');
+    const label = labelEl.value.trim();
+    if (!label) { labelEl.focus(); return; }
+    const date = dateEl.value.trim() || 'ASAP';
+    const sortDate = parseSortDate(date);
+    appState.items.push({ id: appState.nextId++, label, date, sortDate, done: false });
+    labelEl.value = '';
+    dateEl.value = '';
+    labelEl.focus();
+    persist();
+    render();
+  };
+
+  // Firebase listener
+  onValue(dbRef, snapshot => {
+    const data = snapshot.val();
+    if (!data) {
+      appState = JSON.parse(JSON.stringify(DEFAULTS));
+      persist();
+    } else {
+      appState = data;
+    }
+    render();
+  });
+
+  // Keyboard shortcuts for add form
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('new-label').addEventListener('keydown', e => { if (e.key === 'Enter') window.addItem(); });
+    document.getElementById('new-date').addEventListener('keydown', e => { if (e.key === 'Enter') window.addItem(); });
+  });
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; padding: 2rem 1rem; }
@@ -16,23 +270,41 @@
   .stat-label { font-size: .75rem; color: #888; margin-top: 2px; }
   .progress-bar { height: 6px; background: #e5e5e5; border-radius: 3px; margin-bottom: 2rem; overflow: hidden; }
   .progress-fill { height: 100%; background: #4a8c1c; border-radius: 3px; transition: width .3s; }
+  .add-form { background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 1rem; margin-bottom: 1.75rem; }
+  .add-form-title { font-size: .75rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .6rem; }
+  .add-form-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .add-form-row input[type=text] { flex: 1; min-width: 160px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: .875rem; }
+  .add-form-row input.date-input { flex: 0 0 130px; }
+  .add-btn { background: #4a8c1c; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: .875rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .add-btn:hover { background: #3a7015; }
   .section { margin-bottom: 1.75rem; }
   .section-header { font-size: .72rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .07em; padding-bottom: 6px; border-bottom: 1px solid #e5e5e5; margin-bottom: 8px; }
   .item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: background .15s; background: #fff; border: 1px solid #eee; margin-bottom: 5px; }
   .item:hover { background: #f9f9f7; }
   .item.done { opacity: .7; }
   .item.done .label { text-decoration: line-through; color: #aaa; }
-  .checkbox { width: 18px; height: 18px; min-width: 18px; border-radius: 4px; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #fff; transition: all .15s; margin-top: 1px; }
+  .item.edit-row { cursor: default; flex-wrap: wrap; }
+  .item.edit-row:hover { background: #fff; }
+  .edit-label { flex: 1; min-width: 160px; padding: 4px 8px; border: 1px solid #4a8c1c; border-radius: 5px; font-size: .875rem; }
+  .edit-date { width: 110px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 5px; font-size: .875rem; }
+  .save-btn { color: #4a8c1c !important; }
+  .checkbox { width: 18px; height: 18px; min-width: 18px; border-radius: 4px; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #fff; transition: all .15s; margin-top: 1px; flex-shrink: 0; }
   .item.done .checkbox { background: #4a8c1c; border-color: #4a8c1c; color: #fff; }
   .label { font-size: .875rem; line-height: 1.4; flex: 1; }
-  .date-badge { font-size: .7rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; background: #f0f0f0; color: #666; border: 1px solid #e0e0e0; margin-top: 1px; }
+  .date-badge { font-size: .7rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; background: #f0f0f0; color: #666; border: 1px solid #e0e0e0; margin-top: 1px; flex-shrink: 0; }
   .date-badge.urgent { background: #fff0ed; color: #b03a1a; border-color: #f0a090; }
   .date-badge.soon { background: #fff8e6; color: #8a5200; border-color: #f0c060; }
   .date-badge.done-b { background: #eef6e4; color: #3a6e10; border-color: #90c050; }
+  .item-actions { display: flex; gap: 4px; flex-shrink: 0; margin-top: 1px; }
+  .icon-btn { background: none; border: none; color: #bbb; cursor: pointer; font-size: 13px; padding: 2px 5px; border-radius: 4px; transition: color .15s, background .15s; }
+  .icon-btn:hover { color: #555; background: #f0f0f0; }
+  .icon-btn.delete:hover { color: #b03a1a; background: #fff0ed; }
+  #status { font-size: .75rem; color: #aaa; text-align: center; margin-bottom: 1rem; }
   @media print {
     body { background: #fff; padding: .5rem; }
     .item { break-inside: avoid; }
     .section { break-inside: avoid; }
+    .add-form, .item-actions { display: none; }
   }
 </style>
 </head>
@@ -46,154 +318,30 @@
     <div class="stat"><div class="stat-num" id="pct">0%</div><div class="stat-label">Complete</div></div>
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+  <p id="status">Connecting…</p>
+  <div class="add-form">
+    <div class="add-form-title">➕ Add item</div>
+    <div class="add-form-row">
+      <input type="text" id="new-label" placeholder="Item description…" />
+      <input type="text" id="new-date" class="date-input" placeholder="Date (e.g. 7/15)" />
+      <button class="add-btn" onclick="addItem()">Add</button>
+    </div>
+  </div>
   <div id="checklist"></div>
 </div>
-<script>
-// sortDate: numeric key for ordering (YYYYMMDD or special values)
-// 0        = Done (already completed)
-// 1        = ASAP / Before move (float to top of active items)
-// 20260620 = specific dates in 2026
-// 99999999 = open-ended future ("On arrival", "First month", etc.)
-const items = [
-  // ── Completed ──────────────────────────────────────────────────────────────
-  {id:2,  label:"Default judgement filed (6/4)",               date:"Done",        sortDate:0,        done:true},
-  {id:3,  label:"Cyclops cat hotel booked 7/30–8/5 — started", date:"Done",        sortDate:0,        done:true},
-  {id:4,  label:"Follow up on move date (followed up 6/7)",    date:"Done",        sortDate:0,        done:true},
-
-  // ── ASAP / Before move ─────────────────────────────────────────────────────
-  {id:42, label:"Start Kat visa (Italy)",                                           date:"Before move",sortDate:1,        done:false},
-  {id:43, label:"Insurance proof (Italy)",                                           date:"Before move",sortDate:1,        done:false},
-  {id:6,  label:"Consult Israeli pension advisor (urgent — triggers on emigration)", date:"ASAP",       sortDate:1,        done:false},
-  {id:7,  label:"Consult Israeli accountant (pension withdrawal timing)",            date:"ASAP",       sortDate:1,        done:false},
-  {id:8,  label:"Consult expat tax specialist (US-Italy arrangements)",              date:"ASAP",       sortDate:1,        done:false},
-  {id:11, label:"EU Pet Passports — Sunshine & Tiger",                               date:"ASAP",       sortDate:1,        done:false},
-  {id:12, label:"EU Pet Passport — Cyclops",                                         date:"ASAP",       sortDate:1,        done:false},
-  {id:13, label:"EU vet health certificates — Sunshine & Tiger (for 7/31 flight)",  date:"ASAP",       sortDate:1,        done:false},
-  {id:15, label:"Reserve El Al cargo — Sunshine & Tiger (7/31 flight)",             date:"ASAP",       sortDate:1,        done:false},
-  {id:16, label:"Reserve El Al cargo — Cyclops (8/25 flight)",                      date:"ASAP",       sortDate:1,        done:false},
-  {id:17, label:"Car detailing before listing photos (Final Touch / Detail-tech)",  date:"ASAP",       sortDate:1,        done:false},
-  {id:18, label:"What to do with unsold items",                                      date:"ASAP",       sortDate:1,        done:false},
-  {id:19, label:"Health insurance — finalize coverage",                              date:"ASAP",       sortDate:1,        done:false},
-
-  // ── June ───────────────────────────────────────────────────────────────────
-  {id:5,  label:"Dorm applications open — submit application",                      date:"6/20",       sortDate:20260620, done:false},
-
-  // ── July 1 ─────────────────────────────────────────────────────────────────
-  {id:20, label:"Stop utilities & phone (cancel Fiber)",                            date:"7/1",        sortDate:20260701, done:false},
-  {id:21, label:"Transfer Social Security",                                          date:"7/1",        sortDate:20260701, done:false},
-  {id:22, label:"Put car up for sale",                                               date:"7/1",        sortDate:20260701, done:false},
-  {id:23, label:"Offer July items on Facebook",                                      date:"7/1",        sortDate:20260701, done:false},
-
-  // ── By 7/10 ────────────────────────────────────────────────────────────────
-  {id:9,  label:"Rabies vaccinations — Sunshine & Tiger (21 days before 7/31 flight)", date:"By 7/10", sortDate:20260710, done:false},
-
-  // ── July 9–15 ──────────────────────────────────────────────────────────────
-  {id:24, label:"File for Natalee money",                                            date:"7/9",        sortDate:20260709, done:false},
-  {id:25, label:"Get health insurance (Kat)",                                        date:"7/15",       sortDate:20260715, done:false},
-  {id:26, label:"Offer unsold items for free",                                       date:"7/15",       sortDate:20260715, done:false},
-  {id:27, label:"Fill final prescriptions",                                          date:"7/15",       sortDate:20260715, done:false},
-
-  // ── Late July ──────────────────────────────────────────────────────────────
-  {id:28, label:"Cat vet appointment — Sunshine, Tiger & Cyclops (fill out Cyclops sheet)", date:"7/23", sortDate:20260723, done:false},
-  {id:29, label:"Court date",                                                        date:"7/27",       sortDate:20260727, done:false},
-  {id:30, label:"Car handover / pickup",                                             date:"7/29–30",    sortDate:20260729, done:false},
-  {id:31, label:"Cyclops to cat hotel",                                              date:"7/30",       sortDate:20260730, done:false},
-  {id:32, label:"El Al flight — depart Israel (Sunshine & Tiger)",                  date:"7/31",       sortDate:20260731, done:false},
-
-  // ── August — Cyclops ───────────────────────────────────────────────────────
-  {id:10, label:"Rabies vaccination — Cyclops (21 days before 8/25 flight)",        date:"By 8/4",     sortDate:20260804, done:false},
-  {id:33, label:"Cyclops collected from cat hotel by daughter",                      date:"8/5",        sortDate:20260805, done:false},
-  {id:34, label:"Cyclops with daughter until flight",                                date:"8/5–8/25",   sortDate:20260806, done:false},
-  {id:14, label:"EU vet health certificate — Cyclops (for 8/25 flight)",            date:"Before 8/25",sortDate:20260820, done:false},
-  {id:35, label:"El Al flight — Cyclops flies to Italy with daughter",               date:"8/25",       sortDate:20260825, done:false},
-
-  // ── Post-Move (August) ─────────────────────────────────────────────────────
-  {id:1,  label:"Codice fiscale — Kat (sent 6/7, follow up)",                       date:"August",     sortDate:20260801, done:false},
-  {id:40, label:"File Form 629 with Bituach Leumi",                                  date:"August",     sortDate:20260801, done:false},
-  {id:41, label:"Stop supplemental Maccabi tier",                                    date:"August",     sortDate:20260801, done:false},
-
-  // ── Italy — On Arrival ─────────────────────────────────────────────────────
-  {id:36, label:"Register residency in Montecilfone",                                date:"On arrival", sortDate:20260801, done:false},
-  {id:37, label:"Enroll in SSN (Italian national health service)",                   date:"On arrival", sortDate:20260801, done:false},
-  {id:38, label:"Consult commercialista re: 7% flat tax regime",                     date:"On arrival", sortDate:20260801, done:false},
-  {id:39, label:"Find autoscuola in Termoli/Campobasso (Italian driving license)",   date:"First month",sortDate:20260901, done:false},
-
-  // ── October ────────────────────────────────────────────────────────────────
-  {id:44, label:"Dorms open — Zoe school starts",                                    date:"10/10–10/11",sortDate:20261010, done:false},
-
-  // ── December ───────────────────────────────────────────────────────────────
-  {id:45, label:"US taxes 2026 — file / pay",                                        date:"12/15",      sortDate:20261215, done:false},
-];
-
-// Load saved state
-const saved = JSON.parse(localStorage.getItem('checklist_state') || '{}');
-const state = {};
-items.forEach(i => state[i.id] = saved[i.id] !== undefined ? saved[i.id] : i.done);
-
-function save() {
-  localStorage.setItem('checklist_state', JSON.stringify(state));
-}
-
-// Section label derived from sortDate
-function sectionFor(item) {
-  const s = item.sortDate;
-  if (s === 0)        return "✓ Done / In Progress";
-  if (s === 1)        return "⚡ ASAP / Before Move";
-  if (s <= 20260620)  return "June";
-  if (s <= 20260701)  return "July 1";
-  if (s <= 20260710)  return "By July 10";
-  if (s <= 20260715)  return "July 9–15";
-  if (s <= 20260731)  return "Late July";
-  if (s <= 20260825)  return "August — Cyclops & Post-Move";
-  if (s <= 20260930)  return "Italy — On Arrival / First Month";
-  if (s <= 20261031)  return "October";
-  return "December";
-}
-
-function urgency(date) {
-  if (date === "Done") return "done-b";
-  if (["ASAP","By 7/10","By 8/4","Before move"].includes(date)) return "urgent";
-  if (["6/20","7/1"].includes(date)) return "soon";
-  return "";
-}
-
-function render() {
-  // Sort items by sortDate, then by original array order within same sortDate
-  const sorted = [...items].sort((a, b) => a.sortDate - b.sortDate);
-
-  // Build ordered section list preserving first-seen order
-  const sectionOrder = [];
-  sorted.forEach(i => {
-    const sec = sectionFor(i);
-    if (!sectionOrder.includes(sec)) sectionOrder.push(sec);
+<script type="module">
+  // Update status indicator when Firebase connects
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  // Status update after first render
+  const statusEl = document.getElementById('status');
+  // Watch for checklist to populate
+  const observer = new MutationObserver(() => {
+    if (document.getElementById('checklist').children.length > 0) {
+      statusEl.textContent = '🔄 Synced across all devices';
+      observer.disconnect();
+    }
   });
-
-  const cl = document.getElementById('checklist');
-  cl.innerHTML = '';
-  sectionOrder.forEach(sec => {
-    const secItems = sorted.filter(i => sectionFor(i) === sec);
-    const div = document.createElement('div');
-    div.className = 'section';
-    div.innerHTML = `<div class="section-header">${sec}</div>`;
-    secItems.forEach(item => {
-      const isDone = state[item.id];
-      const d = document.createElement('div');
-      d.className = 'item' + (isDone ? ' done' : '');
-      d.innerHTML = `<div class="checkbox">${isDone ? '✓' : ''}</div><div class="label">${item.label}</div><div class="date-badge ${urgency(item.date)}">${item.date}</div>`;
-      d.onclick = () => { state[item.id] = !state[item.id]; save(); render(); };
-      div.appendChild(d);
-    });
-    cl.appendChild(div);
-  });
-
-  const total = items.length;
-  const done = items.filter(i => state[i.id]).length;
-  document.getElementById('done-count').textContent = done;
-  document.getElementById('todo-count').textContent = total - done;
-  document.getElementById('pct').textContent = Math.round(done / total * 100) + '%';
-  document.getElementById('progress').style.width = (done / total * 100) + '%';
-}
-render();
+  observer.observe(document.getElementById('checklist'), { childList: true });
 </script>
 </body>
 </html>
